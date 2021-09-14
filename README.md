@@ -39,8 +39,9 @@ npm run start
 
 ## What does the app show?
 This app shows how you can enable your local video as soon as the meeting session starts.
-You will see two buttons in a UI side by side, join and leave.
+You will see two buttons in a UI side by side, join and leave and the local and remote video will appear one below the other.
 
 - On clicking join button, we create the meeting and attendee and start the meeting session, also the local video should now come up automatically.
 - Included the `LocalVideo` component and used `toggleVideo` function from `useLocalVideo()` hook to start as soon as the meeting session status goes to "succeeded".
 - On clicking leave button, we leave the meeting session.
+- Included `RemoteVideo` component to show remote video tile when an remote attendee joins the same meeting with video enabled.
