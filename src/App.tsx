@@ -7,9 +7,9 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={lightTheme}>
-      <MeetingProvider>
-        <Home />
-      </MeetingProvider>
+        <MeetingProvider>
+          <Home />
+        </MeetingProvider>
       </ThemeProvider>
     </div>
   );

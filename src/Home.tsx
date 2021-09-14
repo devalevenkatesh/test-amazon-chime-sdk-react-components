@@ -3,12 +3,11 @@ import { useEffect } from 'react';
 import { LocalVideo, useMeetingManager, useLocalVideo, useMeetingStatus, MeetingStatus } from 'amazon-chime-sdk-component-library-react';
 
 function Home() {
-  const mm = useMeetingManager();
+  const meetingManager = useMeetingManager();
   const meetingStatus = useMeetingStatus();
   const { toggleVideo } = useLocalVideo();
 
   useEffect(() => {
-    console.log("Meeting Status in Home useEffect", meetingStatus);
     async function tog() {
       if (meetingStatus === MeetingStatus.Succeeded) {
         await toggleVideo();
@@ -28,12 +27,12 @@ function Home() {
       meetingInfo: data.meeting.Meeting,
       attendeeInfo: data.attendee.Attendee,
     };
-    await mm.join(joinData);
-    await mm.start();
+    await meetingManager.join(joinData);
+    await meetingManager.start();
   };
 
   const leaveMeeting = async () => {
-    await mm.leave();
+    await meetingManager.leave();
   }
 
   return (

@@ -1,6 +1,6 @@
 # Setup steps
 
-This is a very basic app built using `amazon-chime-sdk-component-library-react`.
+This is a very basic app built using [`amazon-chime-sdk-component-library-react`](https://github.com/aws/amazon-chime-sdk-component-library-react).
 
 Note: This app is generated using `npx create-react-app --use-npm --template typescript`.
 
@@ -30,5 +30,5 @@ npm run start
 You will see two buttons in a UI side by side, join and leave.
 
 - On clicking join button, we create the meeting and attendee and start the meeting session, also the local video should now come up automatically.
-- Included the `LocalVideo` component and use `toggleVideo` function from `useLocalVideo()` hook to start as soon as the meeting session status goes to "succeeded".
+- Included the `LocalVideo` component and used `toggleVideo` function from `useLocalVideo()` hook to start as soon as the meeting session status goes to "succeeded".
 - On clicking leave button, we leave the meeting session.
