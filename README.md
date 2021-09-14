@@ -6,27 +6,39 @@ Note: This app is generated using `npx create-react-app --use-npm --template typ
 
 ## Steps to run the app
 To run the app:
+1. Clone the repo.
+```
+git clone https://github.com/devalevenkatesh/test-amazon-chime-sdk-react-components.git
+```
 
-1. Change directory to `my-app`.
-2. Install node-modules.
+2. Change directory into the repo cloned directory.
+```
+cd test-amazon-chime-sdk-react-components
+```
+
+3. Install node-modules.
 ```
 npm install
 ```
-2. Export your AWS credentials to the current session in local terminal.
+
+4. Export your AWS credentials to the current session in local terminal.
 ```
 export AWS_ACCESS_KEY_ID=<access-key-id>
 export AWS_SECRET_ACCESS_KEY=<secret-access-key>
 ```
-2. Run the local node server to get the `CreateMeeting` and `CreateAttendee` API responses:
+
+5. Run the local node server to get the `CreateMeeting` and `CreateAttendee` API responses:
 ```
 node server.js
 ```
-3. Run the web application:
+
+6. Run the web application:
 ```
 npm run start
 ```
 
 ## What does the app show?
+This app shows how you can enable your local video as soon as the meeting session starts.
 You will see two buttons in a UI side by side, join and leave.
 
 - On clicking join button, we create the meeting and attendee and start the meeting session, also the local video should now come up automatically.
