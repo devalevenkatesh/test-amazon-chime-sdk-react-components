@@ -16,28 +16,33 @@ git clone https://github.com/devalevenkatesh/test-amazon-chime-sdk-react-compone
 cd test-amazon-chime-sdk-react-components
 ```
 
-3. Install node-modules.
+3. Change directory into the demo specific directory.
+```
+cd meeting-videos-on-join
+```
+
+4. Install node-modules.
 ```
 npm install
 ```
 
-4. Export your AWS credentials to the current session in local terminal.
+5. Export your AWS credentials to the current session in local terminal.
 ```
 export AWS_ACCESS_KEY_ID=<access-key-id>
 export AWS_SECRET_ACCESS_KEY=<secret-access-key>
 ```
 
-5. Run the local node server to get the `CreateMeeting` and `CreateAttendee` API responses:
+6. Run the local node server to get the `CreateMeeting` and `CreateAttendee` API responses:
 ```
 node server.js
 ```
 
-6. Run the web application:
+7. Run the web application:
 ```
 npm run start
 ```
 
-## What does the app show?
+## meeting-video-on-join
 This app shows how you can enable your local video as soon as the meeting session starts.
 You will see two buttons in a UI side by side, join and leave and the local and remote video will appear one below the other.
 
@@ -45,3 +50,8 @@ You will see two buttons in a UI side by side, join and leave and the local and 
 - Included the `LocalVideo` component and used `toggleVideo` function from `useLocalVideo()` hook to start as soon as the meeting session status goes to "succeeded".
 - On clicking leave button, we leave the meeting session.
 - Included `RemoteVideo` component to show remote video tile when an remote attendee joins the same meeting with video enabled.
+
+## remote-video-performance
+This app is testing `RemoteVideo` component memory leak testing. As soon as a remote attendee joins the meeting, videos are turned on for local and remote attendee, then 25 `RemoteVideo` components are mounted and un-mounted based on a timeout. The mount-un-mount cycle is rendered 5 times in a loop.
+
+> This is based on the `meeting-video-on-join` app.

@@ -4,6 +4,8 @@ import {
   useState
 } from 'react';
 
+import {MeetingSessionConfiguration} from 'amazon-chime-sdk-js';
+
 import {
   LocalVideo,
   useMeetingManager,
@@ -27,6 +29,7 @@ function Home() {
   // `RemoteVideos` internally will handle the same for you but wont be limited to just one tileId.
   const { tiles } = useRemoteVideoTileState();
   const [remoteTileId, setRemoteTileId] = useState<number>();
+  const [remoteVideoTiles, setRemoteVideoTiles] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
     async function tog() {
@@ -46,15 +49,41 @@ function Home() {
     }
   }, [tiles]);
 
+  useEffect(() => {
+    async function x(remoteTileId: number) {
+      const start = () => {
+        const remoteVideoTiles = [];
+        for (let i=0;i<25;i++) {
+          remoteVideoTiles.push(<div style={{height:'300px', width: '400px'}} key={i}>
+          <RemoteVideo tileId={remoteTileId}/>
+         </div>);
+        }
+        setRemoteVideoTiles(remoteVideoTiles);
+      }
+      for(let i=0;i<5;i++) {
+        // Mount all 25 remote videos
+        start();
+        await new Promise(r => setTimeout(r, 10000));
+        const stop = () => {
+          setRemoteVideoTiles([]);
+        }
+        // Unmount all 25 remote videos
+        stop();
+        await new Promise(r => setTimeout(r, 2000));
+      }
+    }
+    if (remoteTileId) {
+      x(remoteTileId);
+    }
+    
+  }, [remoteTileId])
+
   const joinMeeting = async () => {
     // Fetch the meeting and attendee data from your server application
     const joinInfo = await fetch(`http://127.0.0.1:8080/join?meetingName=${meetingName}&attendeeName=${attendeeName}`, {method: 'POST'});
     const data = await joinInfo.json();
-    const joinData = {
-      meetingInfo: data.meeting.Meeting,
-      attendeeInfo: data.attendee.Attendee,
-    };
-    await meetingManager.join(joinData);
+    const meetingSessionConfiguration = new MeetingSessionConfiguration(data.meeting.Meeting, data.attendee.Attendee);
+    await meetingManager.join(meetingSessionConfiguration);
     await meetingManager.start();
   };
 
@@ -82,11 +111,13 @@ function Home() {
       </div>
       <button onClick={joinMeeting}>Join</button>
       <button onClick={leaveMeeting}>leave</button>
+      <h3>Local Video</h3>
       <div style={{height:'300px', width: '400px'}}>
         <LocalVideo />
       </div>
-      <div style={{height:'300px', width: '400px'}}>
-        {remoteTileId && <RemoteVideo tileId={remoteTileId} />}
+      <h3>Remote Videos</h3>
+      <div style={{display: 'grid', gridTemplateRows: 'repeat(5, 1fr)', gridTemplateColumns: 'repeat(5, 1fr)'}}>
+        {remoteVideoTiles}
       </div>
     </div>
   );
