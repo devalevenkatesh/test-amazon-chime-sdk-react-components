@@ -4,17 +4,15 @@ import {
   useState
 } from 'react';
 
-import {LogLevel, MeetingSessionConfiguration} from 'amazon-chime-sdk-js';
-
 import {
   LocalVideo,
   useMeetingManager,
   useLocalVideo,
   useMeetingStatus,
   MeetingStatus,
-  useRemoteVideoTileState,
-  RemoteVideo
 } from 'amazon-chime-sdk-component-library-react';
+import { Pagination } from './Video';
+import { LogLevel } from 'amazon-chime-sdk-js';
 
 function Home() {
   const [meetingName, setMeetingName] = useState('');
@@ -22,13 +20,6 @@ function Home() {
   const meetingManager = useMeetingManager();
   const meetingStatus = useMeetingStatus();
   const { toggleVideo } = useLocalVideo();
-  // Get remote video tiles if available and enabled by remote attendees.
-  // You can use `RemoteVideos` component if you do not want to manage remote tiles and handle the remote tileId.
-  // Simply, remove these two lines and the second useEffect which sets the remote tileId.
-  // Change the {remoteTileId && <RemoteVideo tileId={remoteTileId} />} in return method to just <RemoteVideos />
-  // `RemoteVideos` internally will handle the same for you but wont be limited to just one tileId.
-  const { tiles } = useRemoteVideoTileState();
-  const [remoteTileId, setRemoteTileId] = useState<number>();
 
   useEffect(() => {
     async function tog() {
@@ -38,15 +29,6 @@ function Home() {
     }
     tog();
   }, [meetingStatus]);
-
-  // UseEffect to set the remote video tile once remote attendee join with video already started.
-  useEffect(() => {
-    if (tiles && tiles.length) {
-      setRemoteTileId(tiles[0]);
-    } else {
-      setRemoteTileId(undefined);
-    }
-  }, [tiles]);
 
   const joinMeeting = async () => {
     // Fetch the meeting and attendee data from your server application
@@ -91,9 +73,9 @@ function Home() {
       <div style={{height:'300px', width: '400px'}}>
         <LocalVideo />
       </div>
-      <h3>Remote Video</h3>
-      <div style={{height:'300px', width: '400px'}}>
-        {remoteTileId && <RemoteVideo tileId={remoteTileId} />}
+      <h3>Remote Videos</h3>
+      <div style={{display: 'grid', gridTemplateRows: 'repeat(5, 1fr)', gridTemplateColumns: 'repeat(5, 1fr)'}}>
+        <Pagination />
       </div>
     </div>
   );
