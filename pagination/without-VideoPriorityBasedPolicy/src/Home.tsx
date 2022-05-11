@@ -12,7 +12,7 @@ import {
   MeetingStatus,
 } from 'amazon-chime-sdk-component-library-react';
 import { Pagination } from './Video';
-import { LogLevel } from 'amazon-chime-sdk-js';
+import { MeetingSessionConfiguration } from 'amazon-chime-sdk-js';
 
 function Home() {
   const [meetingName, setMeetingName] = useState('');
@@ -34,14 +34,8 @@ function Home() {
     // Fetch the meeting and attendee data from your server application
     const joinInfo = await fetch(`http://127.0.0.1:8080/join?meetingName=${meetingName}&attendeeName=${attendeeName}`, {method: 'POST'});
     const data = await joinInfo.json();
-    const joinData = {
-      meetingInfo: data.meeting.Meeting,
-      attendeeInfo: data.attendee.Attendee,
-      meetingManagerConfig: {
-        logLevel: LogLevel.INFO
-      }
-    };
-    await meetingManager.join(joinData);
+    const meetingSessionConfiguration = new MeetingSessionConfiguration(data.meeting.Meeting, data.attendee.Attendee);
+    await meetingManager.join(meetingSessionConfiguration);
     await meetingManager.start();
   };
 

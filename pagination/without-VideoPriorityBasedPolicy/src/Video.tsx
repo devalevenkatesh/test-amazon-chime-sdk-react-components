@@ -24,16 +24,10 @@ const RemoteVideo: React.FC<any> = ({
       return;
     }
     audioVideo.bindVideoElement(tileId, videoEl.current);
-    const videoElement = videoEl.current
     return () => {
       const tile = audioVideo.getVideoTile(tileId);
       if (tile) {
         audioVideo.unbindVideoElement(tileId);
-        // Added the cleanup.
-        if (videoElement) {
-          videoElement.srcObject = null;
-          videoElement.load();
-        }
       }
     }
   }, [audioVideo, tileId]);
@@ -51,20 +45,58 @@ const RemoteVideo: React.FC<any> = ({
 export const Pagination = () => {
   const { roster } = useRosterState();
   const [startIndex, setStartIndex] = React.useState(0);
+  const [stopInterval, setStopInterval] = React.useState(false);
 
   const PER_PAGE = 3;
   const total = Object.keys(roster).length;
   const attendees = Object.values(roster).slice(startIndex, startIndex + PER_PAGE);
   console.log({ startIndex, attendees, total });
 
+  React.useEffect(() => {
+    if (total < 5) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      setStopInterval(true);
+    }, 120000);
+
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [total]);
+
+  React.useEffect(() => {
+    if (total < 5) {
+      return;
+    }
+    const intervalI2 = setInterval(() => {
+      setStartIndex(Math.min(total - 1, startIndex + PER_PAGE))
+    }, 2000);
+
+    const intervalId1 = setInterval(() => {
+      setStartIndex(Math.max(0, startIndex - PER_PAGE));
+    }, 5000);
+
+    if (stopInterval) {
+      clearInterval(intervalId1);
+      clearInterval(intervalI2);
+    }
+
+    return () => {
+      clearInterval(intervalId1);
+      clearInterval(intervalI2);
+    }
+  }, [total, stopInterval]);
+
   return (
     <div style={{ width: 1000, height: 800 }}>
-      {startIndex > 0 && (
+      {/* {startIndex > 0 && (
         <button onClick={() => setStartIndex(Math.max(0, startIndex - PER_PAGE))}>Previous page</button>
       )}
       {startIndex < total && (
         <button onClick={() => setStartIndex(Math.min(total - 1, startIndex + PER_PAGE))}>Next page</button>
-      )}
+      )} */}
+      {`startIndex: ${startIndex}`}
       {<RemoteVideos attendees={attendees} />}
     </div>
   )
